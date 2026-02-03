@@ -47,6 +47,8 @@ scratch.py
 coverage.*
 *.pem
 *~
+*.lock
+*.lck
 
 # ignores
 *.env
