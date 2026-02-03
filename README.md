@@ -20,7 +20,8 @@ Clone over https:
 ``` https://github.com/mhebbar1/acme_tool.git ```
 
 
-```make install-all
+```
+make install-all
 acme --version
   acme, version 0.0.1
 ```
