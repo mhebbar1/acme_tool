@@ -1,0 +1,217 @@
+[project]
+name = "acme-cli"
+version = "0.0.1"
+description = "Acme CLI service"
+authors = []
+requires-python = ">=3.9,<3.10"
+dependencies = [
+    "click==8.1.3",
+    "pre-commit==3.5.0",
+    "rich==13.3.1",
+    "toml==0.10.2",
+    "packaging==24.0",
+    "coverage[toml]==7.3.2",
+]
+
+[build-system]
+requires = ["setuptools", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
+
+[project.scripts]
+acme = "acme_cli:root"
+
+[tool.coverage.run]
+branch = true
+omit = [
+    "*/site-packages/*",
+    "*/tests/*",
+    "*/.eggs/*",
+]
+
+[dependency-groups]
+dev = [
+    "ruff==0.11.10",
+    "black==23.7.0",
+    "pytest>=8.3.5",
+    "pytest-coverage>=0.0",
+]
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = true
+
+[tool.ruff]
+select = [
+    "E",    # pycodestyle
+    "F",    # pyflakes
+    "D",    # pydocstyle
+    "UP",   # pyupgrade
+    "B",    # flake8-bugbear
+    "I",    # isort
+    "N",    # pep8-naming
+    "S",    # flake8-bandit
+    "A",    # flake8-builtins
+    "COM",  # flake8-commas
+    "C4",   # flake8-comprehensions
+    "DJ",   # flake8-django
+    "ISC",  # flake8-implicit-str-concat
+    "G",    # flake8-logging-format
+    "INP",  # implicit-namespace-package
+    "PIE",  # flake8-pie
+    "T20",  # flake8-print
+    "Q",    # flake8-quotes
+    "RSE",  # flake8-raise
+    "RET",  # flake8-return
+    "SLF",  # flake8-self
+    "SIM",  # flake8-simplify
+    "TID",  # flake8-tidy-imports
+    "TD",   # flake8-todos
+    "ERA",  # eradicate
+    "PGH",  # pygrep-hooks
+    "PL",   # pylint
+    "PERF", # perflint
+    "RUF",  # ruff-specific rules
+]
+ignore = [
+    "A003",    # Class attribute {name} is shadowing a Python builtin
+    "B904",    # Within an except clause, raise exceptions with raise ... from err or raise ... from None to distinguish them from errors in exception handling
+    "D100",    # Missing docstring in public module
+    "D105",    # Missing docstring in magic method
+    "D107",    # Missing docstring in __init__
+    "D205",    # 1 blank line required between summary line and description
+    "D212",    # Multi-line docstring summary should start at the first line
+    "D417",    # Missing argument description in the docstring: {name}
+    "N803",    # Argument name {name} should be lowercase
+    "N806",    # Variable {name} in function should be lowercase
+    "N812",    # Lowercase {name} imported as non-lowercase {asname}
+    "N818",    # Exception name {name} should be named with an Error suffix
+    "N999",    # Invalid module name: '{name}'
+    "S101",    # Use of assert detected
+    "S104",    # Possible binding to all interfaces
+    "S105",    # Possible hardcoded password assigned to: "{}"
+    "S108",    # Probable insecure usage of temporary file or directory
+    "S113",    # Probable use of requests call without timeout
+    "S308",    # Use of `mark_safe` may expose cross-site scripting vulnerabilities
+    "S311",    # Standard pseudo-random generators are not suitable for security/cryptographic purposes
+    "S324",    # Probable use of insecure hash functions in `hashlib`: `md5`
+    "S603",    # subprocess call: check for execution of untrusted input
+    "S604",    # Function call with `shell=True` parameter identified, security issue
+    "S607",    # Starting a process with a partial executable path
+    "PLR2004", # Magic value used in comparison, consider replacing {value} with a constant variable
+    "PLR5501", # Use elif instead of else then if, to reduce indentation
+    "SIM102",  # Use a single if statement instead of nested if statements
+    "RUF001",  # String contains ambiguous {}. Did you mean {}?
+    "RUF012",  # Mutable class attributes should be annotated with typing.ClassVar
+    "PERF401", # Use a list comprehension to create a transformed list
+    "DJ001",   # Avoid using null=True on string-based fields such as CharField and TextField
+    "DJ008",   # Model does not define `__str__` method
+    "DJ012",   # Order of model's inner classes, methods, and fields does not follow the Django Style Guide: {element_type} should come before
+    "TD003",   # Missing issue link on the line following this TODO
+    "TD002",   # Missing author in TODO
+    "RET503",  # Missing explicit return at the end of function able to return non-None value
+    "RET504",  # Unnecessary assignment to {name} before return statement
+    "ERA001",  # Found commented-out code
+    "PLE1205", # Too many arguments for `logging` format string
+    "PGH003",  # Use specific rule codes when ignoring type issues
+    "PGH004",  # Use specific rule codes when using `noqa`
+    "T201",    # print found
+    "ISC001",  # single line implicit string concat
+    "PLR1704", # Redefining argument with the local name
+]
+
+extend-exclude = [
+    'docker/*',
+    '**/migrations/**',
+    '**/deprecated/**',
+    # Exclude dot files or files in dot directories.
+    '**/\.*/**',
+    '\.*',
+]
+
+line-length = 88
+target-version = "py39"
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["F401", "E402", "D104"]
+"*/tests/*.py" = [
+    "S",
+    "PERF",
+    "D101",
+    "D102",
+    "D106",
+    "SLF001",
+    "N802",
+    "E501",
+    "RUF001",
+]
+"admin.py" = ["D100", "D101", "D102"]
+"constants.py" = ["D204", "E501"]
+"management/commands/*.py" = ["D101", "INP001"]
+"models.py" = ["D204", "D106"]
+"models/*.py" = ["D204", "D106"]
+"urls*.py" = ["E501"]
+"*language.py" = ["E501"]
+# This rule says multi line strings with backslashes should be raw strings
+# but doing so breaks the help formatting in click
+"*.py"= ["D301"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.lint.flake8-quotes]
+inline-quotes = "single"
+
+[tool.ruff.lint.isort]
+force-wrap-aliases = true
+combine-as-imports = true
+lines-between-types = 1
+known-first-party = [
+    "acme",
+]
+known-third-party = [
+    "dateutil",
+    "click",
+    "django",
+    "pytz",
+    "pyyaml",
+    "requests",
+    "rich",
+]
+section-order = [
+    "future",
+    "standard-library",
+    "third-party",
+    "first-party",
+    "local-folder",
+]
+
+[tool.ruff.lint.isort.sections]
+"future" = ["future"]
+"standard-library" = ["standard-library"]
+"third-party" = ["third-party"]
+"first-party" = ["first-party"]
+"local-folder" = ["local-folder"]
+
+[tool.ruff.lint.pylint]
+max-args = 10
+max-branches = 40
+max-returns = 10
+max-statements = 100
+
+[tool.black]
+line-length = 88
+target-version = ["py39"]
+skip-string-normalization = true
+force-exclude = '''
+(
+  \.github\/
+  | migrations\/
+  | urls.*\.py
+  | .*language\.py
+)
+'''
+
+[tool.uv.workspace]
+members = [
+    "echo/echo",
+]

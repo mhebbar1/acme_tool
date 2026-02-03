@@ -5,7 +5,6 @@ This cli tool enables seamless Kubernetes deployment and dependency management, 
 ## Prerequisites
 
 This utility has been tested using the following versions.
-Unix installation requires some manual steps.
 
 * MacOS 15.7.3 or higher.
 * Docker Desktop 4.57.0 (215387) or higher.
@@ -79,7 +78,7 @@ Options:
 
 e.g:
 # Lists all resources under your username
-acme als
+acme ls
 # Lists resources for another user
 acme ls --namespace bobsmith
 ```
@@ -100,14 +99,15 @@ Options:
   --new              Boolean, create new namespace
   -h, --help         Show this message and exit.
 
+You can combine one or more options or use the default.
 
 e.g: 
 # deploy with all default configuration in the $user namespace
 acme deploy
 # Create a new namespace with datastamp for $user and deploy
 acme deploy --new
-# deploy with custom resources
-acme deploy --resources limits.memory=512Mi,limits.cpu=500m
+# deploy with custom resources. requested resources should be less than the limits.
+acme deploy --resources requests.memory=300Mi,requests.cpu=250m,limits.memory=512Mi,limits.cpu=500m
 # deploy with added environment vars
 acme deploy --add_env FOO=BAR,ENV=DEV,SEARCH_ENGINE="https://www.google.com"
 # deploy with additional app labels
