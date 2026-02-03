@@ -4,7 +4,10 @@ This cli tool enables seamless Kubernetes deployment and dependency management, 
 
 ## Prerequisites
 
-* MacOS 15.7.3 or higher, or Any Linux flavor that supports Docker Desktop.
+This utility has been tested using the following versions.
+Unix installation requires some manual steps.
+
+* MacOS 15.7.3 or higher.
 * Docker Desktop 4.57.0 (215387) or higher.
 
 ## Clone the Repo
@@ -13,14 +16,15 @@ Ask the owner to give you access to the repo.
 
 Clone over ssh
 
-``` git@github.com:mhebbar1/acme_tool.git ```
+```git clone git@github.com:mhebbar1/acme_tool.git ```
 
 Clone over https:
 
-``` https://github.com/mhebbar1/acme_tool.git ```
+```git clone https://github.com/mhebbar1/acme_tool.git ```
 
 
-```
+```sh
+cd acme_tool
 make install-all
 acme --version
   acme, version 0.0.1
@@ -43,13 +47,12 @@ ingress. You can do this by running:
 
 ## Install nginx controller
 ```sh
-cd acme_tool
 make bootstrap-docker-desktop
 ```
 
 ## Using the Tool
 
-``` acme -h
+```sh acme -h
 Usage: acme [OPTIONS] COMMAND [ARGS]...
 
   Welcome to the Acme CLI
@@ -65,7 +68,7 @@ Commands:
   ls      List namespaces.
 ```
 
-``` acme ls -h
+```sh acme ls -h
 Usage: acme ls [OPTIONS]
 
   List namespaces.
@@ -73,9 +76,15 @@ Usage: acme ls [OPTIONS]
 Options:
   --namespace TEXT  namespace to use
   -h, --help        Show this message and exit.
+
+e.g:
+# Lists all resources under your username
+acme als
+# Lists resources for another user
+acme ls --namespace bobsmith
 ```
 
-``` acme deploy -h
+```sh acme deploy -h
 Usage: acme deploy [OPTIONS]
 
   Deploys a specified service along with any dependencies it requires.
@@ -90,9 +99,26 @@ Options:
   --user TEXT        Username to use for namespace, default is current user
   --new              Boolean, create new namespace
   -h, --help         Show this message and exit.
+
+
+e.g: 
+# deploy with all default configuration in the $user namespace
+acme deploy
+# Create a new namespace with datastamp for $user and deploy
+acme deploy --new
+# deploy with custom resources
+acme deploy --resources limits.memory=512Mi,limits.cpu=500m
+# deploy with added environment vars
+acme deploy --add_env FOO=BAR,ENV=DEV,SEARCH_ENGINE="https://www.google.com"
+# deploy with additional app labels
+acme deploy --add_labels TOKEN=TEST,APPLICATION=BUGSCRUB
+# deploy in a namespace for bobsmith
+acme deploy --user bobsmith
+# Create a new namespace with datastamp for user bobsmith 
+acme deploy --user bobsmith --new
 ```
 
-``` acme delete -h
+```sh acme delete -h
 Usage: acme delete [OPTIONS]
 
   Deletes a specified service and its direct dependencies.
@@ -102,9 +128,17 @@ Options:
   --namespace TEXT  namespace to use
   -h, --help        Show this message and exit.
 
+
+e.g:
+# delete all resources under $user namespace
+acme delete
+# delete all resources under $user namespace including namespace itself
+acme delete --name_also
+# delete all resources under namespace bobsmith and namespace also
+acme delete --namespace bobsmith --name_also
 ```
 
-``` acme logs -h
+```sh acme logs -h
 Usage: acme logs [OPTIONS]
 
   Streams the logs from a specified service.
