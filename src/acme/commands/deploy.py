@@ -1,0 +1,101 @@
+"""Deploys a specified service along with any dependencies it requires."""
+import os
+from datetime import datetime
+import click # type: ignore
+
+now = datetime.now()
+USER = os.environ.get('USER')
+
+@click.option('--new', is_flag=True, help='Boolean, create new namespace')
+@click.option('--user', default=USER,
+               help='Username to use for namespace, default is current user')
+@click.option('--add_labels', default=None,
+               help='Additional labels to pass to helm install, key=value format')
+@click.option('--add_env', default=None,
+               help='Additional env vars to pass to helm install, key=value format')
+@click.option('--resources', default=None,
+               help='Helm resources to override during helm install, key=value format')
+@click.command()
+
+def deploy(new, user, add_labels, add_env, resources):
+    """Deploys a specified service along with any dependencies it requires."""
+    #raise NotImplementedError
+    if new:
+        namespace = f"{now.strftime('%Y%m%d%H%M%S')}-{user}"
+    else:
+        namespace = user
+
+    print(f"Deploying resources to namespace: {namespace}")
+
+    # Install redis
+    cmd1 = f'helm upgrade --install \
+  --kube-context docker-desktop \
+  --namespace {namespace} \
+  --create-namespace \
+  ping-redis \
+  bitnami/redis \
+  --wait --install \
+  -f src/helm/values/ping/redis.yaml'
+
+    # Install Postgres
+    cmd2 = f'helm upgrade \
+  --kube-context docker-desktop \
+  --namespace {namespace} \
+  --create-namespace \
+  ping-postgres \
+  bitnami/postgresql \
+  --wait --install \
+  -f src/helm/values/ping/postgres.yaml'
+
+    # Prepare connection strings
+    redis_url = f'redis://ping-redis-master.{namespace}:6379'
+    pg_host = f'ping-postgres-postgresql.{namespace}.svc.cluster.local'
+    pg_db = 'postgres'
+    pg_user = 'postgres'
+
+    # Install Ping service
+    cmd3 = f'helm upgrade \
+  --kube-context docker-desktop \
+  --namespace {namespace} \
+  ping \
+  src/helm/application/ \
+  --wait --install \
+  -f src/helm/values/ping/values.yaml \
+  --set image.name=0x7162/ping \
+  --set image.tag=latest \
+  --set api.additionalEnvVariables.REDIS_CACHE_URL={redis_url} \
+  --set api.additionalEnvVariables.POSTGRES_HOST={pg_host} \
+  --set api.additionalEnvVariables.POSTGRES_DB={pg_db} \
+  --set api.additionalEnvVariables.POSTGRES_USER={pg_user}'
+
+    # Process additional labels
+    for arg in (add_labels or "").split(","):
+        if arg.strip():
+            key, value = arg.split("=")
+            if key == "app":
+                print("The 'app' label is reserved and cannot be modified.")
+            else:
+                cmd3 += f" --set api.additionalLabels.{key.strip()}={value.strip()}"
+
+    # Process additional env vars
+    for env_arg in (add_env or "").split(","):
+        if env_arg.strip():
+            key, value = env_arg.split("=")
+            cmd3 += f" --set api.additionalEnvVariables.{key.strip()}={value.strip()}"
+
+    # Process helm resource overrides
+    for resources_v in (resources or "").split(","):
+        if resources_v.strip():
+            key, value = resources_v.split("=")
+            cmd3 += f" --set api.resources.{key.strip()}={value.strip()}"
+
+    print("\nExecuting deployment commands...\n")
+    cmd1_status = os.system(cmd1)
+    cmd2_status = os.system(cmd2)
+    cmd3_status = os.system(cmd3)
+
+    if cmd1_status != 0 or cmd2_status != 0 or cmd3_status != 0:
+        raise RuntimeError("Failed to deploy Ping service or its dependencies.")
+
+    print("\nDeployment completed successfully.")
+    print(f"\nUI is accessible at http://ping.{namespace}.127.0.0.1.nip.io/ping\n")

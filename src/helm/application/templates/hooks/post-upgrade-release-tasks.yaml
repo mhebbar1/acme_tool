@@ -1,0 +1,47 @@
+# Post-upgrade hook that will run `./release-tasks.sh` script before upgrading the service pods.
+
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: "{{ $.Release.Name }}-release-tasks"
+  labels:
+    app.kubernetes.io/managed-by: {{ $.Release.Service | quote }}
+    app.kubernetes.io/instance: {{ $.Release.Name | quote }}
+    app.kubernetes.io/version: {{ $.Chart.AppVersion }}
+    helm.sh/chart: "{{ $.Chart.Name }}-{{ $.Chart.Version }}"
+  annotations:
+    "helm.sh/hook": post-upgrade, post-install
+    "helm.sh/hook-weight": "0"
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+spec:
+  backoffLimit: 0
+  template:
+    metadata:
+      name: "{{ $.Release.Name }}"
+      labels:
+        app.kubernetes.io/managed-by: {{ $.Release.Service | quote }}
+        app.kubernetes.io/instance: {{ $.Release.Name | quote }}
+        helm.sh/chart: "{{ $.Chart.Name }}-{{ $.Chart.Version }}"
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: main
+          resources:
+            limits:
+              cpu: 1000m
+              memory: 2Gi
+            requests:
+              cpu: 500m
+              memory: 1Gi
+          image: "{{ required "A value is required for .Values.image.name" $.Values.image.name }}:{{ required "A value is required for .Values.image.tag" $.Values.image.tag }}"
+          imagePullPolicy: IfNotPresent
+          command:
+            - ./release-tasks.sh
+          workingDir: "/app"
+          ports:
+            - containerPort: 3000
+          env:
+          {{- range $key, $value := $.Values.api.additionalEnvVariables }}
+          - name: {{ $key }}
+            value: {{ $value | quote}}
+          {{- end}}

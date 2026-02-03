@@ -1,0 +1,439 @@
+global:
+  imageRegistry: ""
+  imagePullSecrets: []
+  storageClass: standard
+  security:
+    allowInsecureImages: true
+  redis:
+    password: "redis"
+kubeVersion: ""
+nameOverride: ""
+fullnameOverride: ping-redis
+commonLabels:
+  service: ping
+commonAnnotations: {}
+clusterDomain: cluster.local
+extraDeploy: []
+diagnosticMode:
+  enabled: false
+  command:
+  - sleep
+  args:
+  - infinity
+image:
+  # registry: 538001969475.dkr.ecr.us-west-2.amazonaws.com
+  repository: bitnami/redis
+  tag: latest
+  pullPolicy: IfNotPresent
+  pullSecrets: []
+  debug: false
+architecture: standalone
+auth:
+  enabled: false
+  sentinel: false
+  password: ""
+  existingSecret: ""
+  existingSecretPasswordKey: ""
+  usePasswordFiles: false
+commonConfiguration: |-
+  appendonly yes
+  save ""
+existingConfigmap: ""
+master:
+  configuration: ""
+  disableCommands:
+  - FLUSHDB
+  - FLUSHALL
+  command: []
+  args: []
+  preExecCmds: []
+  extraFlags: []
+  extraEnvVars: []
+  extraEnvVarsCM: ""
+  extraEnvVarsSecret: ""
+  containerPorts:
+    redis: 6379
+  startupProbe:
+    enabled: false
+    initialDelaySeconds: 20
+    periodSeconds: 5
+    timeoutSeconds: 5
+    successThreshold: 1
+    failureThreshold: 5
+  livenessProbe:
+    enabled: false
+    initialDelaySeconds: 20
+    periodSeconds: 5
+    timeoutSeconds: 5
+    successThreshold: 1
+    failureThreshold: 5
+  readinessProbe:
+    enabled: false
+    initialDelaySeconds: 20
+    periodSeconds: 5
+    timeoutSeconds: 1
+    successThreshold: 1
+    failureThreshold: 5
+  customStartupProbe: {}
+  customLivenessProbe: {}
+  customReadinessProbe: {}
+  resources:
+    limits:
+      cpu: 100m
+      memory: 50Mi
+    requests:
+      memory: 20Mi
+      cpu: 20m
+  podSecurityContext:
+    enabled: true
+    fsGroup: 1001
+  containerSecurityContext:
+    enabled: true
+    runAsUser: 1001
+  schedulerName: ""
+  updateStrategy:
+    type: RollingUpdate
+    rollingUpdate: {}
+  priorityClassName: ""
+  hostAliases: []
+  podLabels:
+    service: ping
+  podAnnotations: {}
+  shareProcessNamespace: false
+  podAffinityPreset: ""
+  podAntiAffinityPreset: soft
+  nodeAffinityPreset:
+    type: ""
+    key: ""
+    values: []
+  affinity: {}
+  # nodeSelector
+  #   eks.amazonaws.com/capacityType: ON_DEMAND
+  tolerations:
+  - key: state_arch
+    operator: Equal
+    value: stateless
+    effect: NoSchedule
+  - key: single_az
+    operator: Equal
+    value: "true"
+    effect: NoSchedule
+  topologySpreadConstraints: []
+  lifecycleHooks: {}
+  extraVolumes: []
+  extraVolumeMounts: []
+  sidecars: []
+  initContainers: []
+  persistence:
+    enabled: true
+    medium: ""
+    path: /data
+    subPath: ""
+    storageClass: standard
+    accessModes:
+    - ReadWriteOnce
+    size: 8Gi
+    annotations: {}
+    selector: {}
+    dataSource: {}
+    existingClaim: ""
+  service:
+    type: ClusterIP
+    ports:
+      redis: 6379
+    nodePorts:
+      redis: ""
+    externalTrafficPolicy: Cluster
+    extraPorts: []
+    clusterIP: ""
+    loadBalancerIP: ""
+    loadBalancerSourceRanges: []
+    annotations: {}
+  terminationGracePeriodSeconds: 30
+replica:
+  replicaCount: 3
+  configuration: ""
+  disableCommands:
+  - FLUSHDB
+  - FLUSHALL
+  command: []
+  args: []
+  preExecCmds: []
+  extraFlags: []
+  extraEnvVars: []
+  extraEnvVarsCM: ""
+  extraEnvVarsSecret: ""
+  containerPorts:
+    redis: 6379
+  startupProbe:
+    enabled: false
+    initialDelaySeconds: 20
+    periodSeconds: 5
+    timeoutSeconds: 5
+    successThreshold: 1
+    failureThreshold: 5
+  livenessProbe:
+    enabled: true
+    initialDelaySeconds: 20
+    periodSeconds: 5
+    timeoutSeconds: 5
+    successThreshold: 1
+    failureThreshold: 5
+  readinessProbe:
+    enabled: true
+    initialDelaySeconds: 20
+    periodSeconds: 5
+    timeoutSeconds: 1
+    successThreshold: 1
+    failureThreshold: 5
+  customStartupProbe: {}
+  customLivenessProbe: {}
+  customReadinessProbe: {}
+  resources:
+    limits: {}
+    requests: {}
+  podSecurityContext:
+    enabled: true
+    fsGroup: 1001
+  containerSecurityContext:
+    enabled: true
+    runAsUser: 1001
+  schedulerName: ""
+  updateStrategy:
+    type: RollingUpdate
+    rollingUpdate: {}
+  priorityClassName: ""
+  podManagementPolicy: ""
+  hostAliases: []
+  podLabels: {}
+  podAnnotations: {}
+  shareProcessNamespace: false
+  podAffinityPreset: ""
+  podAntiAffinityPreset: soft
+  nodeAffinityPreset:
+    type: ""
+    key: ""
+    values: []
+  affinity: {}
+  nodeSelector: {}
+  tolerations:
+  - key: state_arch
+    operator: Equal
+    value: stateless
+    effect: NoSchedule
+  topologySpreadConstraints: []
+  lifecycleHooks: {}
+  extraVolumes: []
+  extraVolumeMounts: []
+  sidecars: []
+  initContainers: []
+  persistence:
+    enabled: true
+    medium: ""
+    path: /data
+    subPath: ""
+    storageClass: standard
+    accessModes:
+    - ReadWriteOnce
+    size: 8Gi
+    annotations: {}
+    selector: {}
+    dataSource: {}
+  service:
+    type: ClusterIP
+    ports:
+      redis: 6379
+    nodePorts:
+      redis: ""
+    externalTrafficPolicy: Cluster
+    extraPorts: []
+    clusterIP: ""
+    loadBalancerIP: ""
+    loadBalancerSourceRanges: []
+    annotations: {}
+  terminationGracePeriodSeconds: 30
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 11
+    targetCPU: ""
+    targetMemory: ""
+sentinel:
+  enabled: false
+  image:
+    registry: 538001969475.dkr.ecr.us-west-2.amazonaws.com
+    repository: docker-hub/bitnami/redis-sentinel
+    tag: 6.2.6-debian-10-r100
+    pullPolicy: IfNotPresent
+    pullSecrets: []
+    debug: false
+  masterSet: mymaster
+  quorum: 2
+  automateClusterRecovery: false
+  downAfterMilliseconds: 60000
+  failoverTimeout: 18000
+  parallelSyncs: 1
+  configuration: ""
+  command: []
+  args: []
+  preExecCmds: []
+  extraEnvVars: []
+  extraEnvVarsCM: ""
+  extraEnvVarsSecret: ""
+  containerPorts:
+    sentinel: 26379
+  startupProbe:
+    enabled: false
+    initialDelaySeconds: 20
+    periodSeconds: 5
+    timeoutSeconds: 5
+    successThreshold: 1
+    failureThreshold: 5
+  livenessProbe:
+    enabled: true
+    initialDelaySeconds: 20
+    periodSeconds: 5
+    timeoutSeconds: 5
+    successThreshold: 1
+    failureThreshold: 5
+  readinessProbe:
+    enabled: true
+    initialDelaySeconds: 20
+    periodSeconds: 5
+    timeoutSeconds: 1
+    successThreshold: 1
+    failureThreshold: 5
+  customStartupProbe: {}
+  customLivenessProbe: {}
+  customReadinessProbe: {}
+  resources:
+    limits: {}
+    requests: {}
+  containerSecurityContext:
+    enabled: true
+    runAsUser: 1001
+  lifecycleHooks: {}
+  extraVolumes: []
+  extraVolumeMounts: []
+  service:
+    type: ClusterIP
+    ports:
+      redis: 6379
+      sentinel: 26379
+    nodePorts:
+      redis: ""
+      sentinel: ""
+    externalTrafficPolicy: Cluster
+    extraPorts: []
+    clusterIP: ""
+    loadBalancerIP: ""
+    loadBalancerSourceRanges: []
+    annotations: {}
+  terminationGracePeriodSeconds: 30
+networkPolicy:
+  enabled: false
+  allowExternal: true
+  extraIngress: []
+  extraEgress: []
+  ingressNSMatchLabels: {}
+  ingressNSPodMatchLabels: {}
+podSecurityPolicy:
+  create: false
+  enabled: false
+rbac:
+  create: false
+  rules: []
+serviceAccount:
+  create: true
+  name: ""
+  automountServiceAccountToken: true
+  annotations: {}
+pdb:
+  create: false
+  minAvailable: 1
+  maxUnavailable: ""
+tls:
+  enabled: false
+  authClients: true
+  autoGenerated: false
+  existingSecret: ""
+  certificatesSecret: ""
+  certFilename: ""
+  certKeyFilename: ""
+  certCAFilename: ""
+  dhParamsFilename: ""
+metrics:
+  enabled: false
+  image:
+    registry: 538001969475.dkr.ecr.us-west-2.amazonaws.com
+    repository: docker-hub/bitnami/redis-exporter
+    tag: 1.33.0-debian-10-r27
+    pullPolicy: IfNotPresent
+    pullSecrets: []
+  redisTargetHost: localhost
+  extraArgs: {}
+  containerSecurityContext:
+    enabled: true
+    runAsUser: 1001
+  extraVolumes: []
+  extraVolumeMounts: []
+  resources:
+    limits: {}
+    requests: {}
+  podLabels: {}
+  podAnnotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "9121"
+  service:
+    type: ClusterIP
+    port: 9121
+    externalTrafficPolicy: Cluster
+    extraPorts: []
+    loadBalancerIP: ""
+    loadBalancerSourceRanges: []
+    annotations: {}
+  serviceMonitor:
+    enabled: false
+    namespace: ""
+    interval: 30s
+    scrapeTimeout: ""
+    relabellings: []
+    metricRelabelings: []
+    honorLabels: false
+    additionalLabels: {}
+  prometheusRule:
+    enabled: false
+    namespace: ""
+    additionalLabels: {}
+    rules: []
+volumePermissions:
+  enabled: false
+  image:
+    registry: 538001969475.dkr.ecr.us-west-2.amazonaws.com
+    repository: docker-hub/bitnami/bitnami-shell
+    tag: 10-debian-10-r312
+    pullPolicy: IfNotPresent
+    pullSecrets: []
+  resources:
+    limits: {}
+    requests: {}
+  containerSecurityContext:
+    runAsUser: 0
+sysctl:
+  enabled: false
+  image:
+    registry: 538001969475.dkr.ecr.us-west-2.amazonaws.com
+    repository: docker-hub/bitnami/bitnami-shell
+    tag: 10-debian-10-r312
+    pullPolicy: IfNotPresent
+    pullSecrets: []
+  command: []
+  mountHostSys: false
+  resources:
+    limits: {}
+    requests: {}
+useExternalDNS:
+  enabled: false
+  suffix: ""
+  annotationKey: external-dns.alpha.kubernetes.io/
+  additionalAnnotations: {}

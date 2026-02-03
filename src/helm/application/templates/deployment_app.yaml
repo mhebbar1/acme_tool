@@ -1,0 +1,59 @@
+{{- with .Values.api }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $.Release.Name }}-api
+  namespace: {{ $.Release.Namespace }}
+  labels:
+    app: {{ $.Release.Name }}
+    {{- range $key, $value := $.additionalLabels }}
+    {{ $key }}: {{ $value }}
+    {{- end}}
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: {{ $.Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ $.Release.Name }}
+        {{- range $key, $value := .additionalLabels }}
+        {{ $key }}: {{ $value }}
+        {{- end}}
+    spec:
+      containers:
+      - name: main
+        image: "{{ required "A value is required for .Values.image.name" $.Values.image.name }}:{{ required "A value is required for .Values.image.tag" $.Values.image.tag }}"
+        imagePullPolicy: {{ $.Values.image.pullPolicy | default "IfNotPresent" }}
+        stdin: true
+        tty: true
+        command:
+          - uv
+          - run
+          - manage.py
+          - runserver
+          - 0.0.0.0:3000
+        workingDir: "/app"
+        ports:
+        - containerPort: 3000
+        env:
+        {{- range $key, $value := .additionalEnvVariables }}
+        - name: {{ $key }}
+          value: {{ $value | quote}}
+        {{- end}}
+        resources:
+          requests:
+            cpu: {{ .resources.requests.cpu }}
+            memory: {{ .resources.requests.memory }}
+          limits:
+            cpu: {{ .resources.limits.cpu }}
+            memory: {{ .resources.limits.memory }}
+        readinessProbe:
+          httpGet:
+            path: /health/
+            port: 3000
+{{- end }}

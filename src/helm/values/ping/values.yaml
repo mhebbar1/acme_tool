@@ -1,0 +1,22 @@
+---
+image:
+  name: #empty
+  tag: #empty
+metadata:
+  name: # empty
+  labels: # empty
+  annotations: # empty
+replicaCount: 1
+additionalLabels: {}
+additionalEnvVariables: 
+nodeSelector: {}
+tolerations: []
+affinity: {}
+api:
+  resources:
+    requests:
+      cpu: "256m"
+      memory: "256Mi"
+    limits:
+      cpu: "256m"
+      memory: "256Mi"
