@@ -11,6 +11,8 @@ This utility has been tested using the following versions.
 * MacOS 15.7.3 or higher.
 * Docker Desktop 4.57.0 (215387) or higher.
 
+Docker Desktop Install Guide for Mac: https://docs.docker.com/desktop/setup/install/mac-install/
+
 ## Clone the Repo
 
 Ask the owner to give you access to the repo.
@@ -104,18 +106,18 @@ Options:
 You can combine one or more options or use the default.
 
 e.g: 
-# deploy with all default configuration in the $user namespace
+# Deploy with all default configuration in the $user namespace
 acme deploy
 # Create a new namespace with datastamp for $user and deploy
 acme deploy --new
-# deploy with custom resources. requested resources should be less than the limits.
+# Deploy with custom resources. requested resources should be less than the limits.
 # Default resources: requests.memory=256Mi,requests.cpu=256m,limits.memory=256Mi,limits.cpu=256m
 acme deploy --resources requests.memory=300Mi,requests.cpu=250m,limits.memory=512Mi,limits.cpu=500m
-# deploy with added environment vars
+# Deploy with added environment vars
 acme deploy --add_env FOO=BAR,ENV=DEV,SEARCH_ENGINE="https://www.google.com"
-# deploy with additional app labels
+# Deploy with additional app labels
 acme deploy --add_labels TOKEN=TEST,APPLICATION=BUGSCRUB
-# deploy in a namespace for bobsmith
+# Deploy in a namespace for bobsmith
 acme deploy --user bobsmith
 # Create a new namespace with datastamp for user bobsmith 
 acme deploy --user bobsmith --new
@@ -133,11 +135,11 @@ Options:
 
 
 e.g:
-# delete all resources under $user namespace
+# Delete all resources under $user namespace
 acme delete
-# delete all resources under $user namespace including namespace itself
+# Delete all resources under $user namespace including namespace itself
 acme delete --name_also
-# delete all resources under namespace bobsmith and namespace also
+# Delete all resources under namespace bobsmith and namespace also
 acme delete --namespace bobsmith --name_also
 ```
 
@@ -156,10 +158,10 @@ pod_name can be found from `acme ls` command.
 
 e.g:
 
-# get logs for a given pod in the $user namespace
+# Get logs for a given pod in the $user namespace
 acme logs --pod_name pod/ping-api-8477794564-24wmc
-# logtail for a pod $user namespace
+# Logtail for a pod $user namespace
 acme logs --pod_name pod/ping-api-8477794564-24wmc --cont
-# logtail for a pod in a different namespace
+# Logtail for a pod in a different namespace
 acme logs --pod_name pod/ping-api-8477794564-24wmc  --cont --namespace 20260202111749-murthyhebbar
 ```
