@@ -2,6 +2,8 @@
 
 This cli tool enables seamless Kubernetes deployment and dependency management, eliminating the need for in-depth Kubernetes knowledge.
 
+This tool currently supports one application ping api and its dependencies.
+
 ## Prerequisites
 
 This utility has been tested using the following versions.
@@ -107,6 +109,7 @@ acme deploy
 # Create a new namespace with datastamp for $user and deploy
 acme deploy --new
 # deploy with custom resources. requested resources should be less than the limits.
+# Default resources: requests.memory=256Mi,requests.cpu=256m,limits.memory=256Mi,limits.cpu=256m
 acme deploy --resources requests.memory=300Mi,requests.cpu=250m,limits.memory=512Mi,limits.cpu=500m
 # deploy with added environment vars
 acme deploy --add_env FOO=BAR,ENV=DEV,SEARCH_ENGINE="https://www.google.com"
@@ -148,6 +151,8 @@ Options:
   --pod_name TEXT   Pod name
   --cont            log tail
   -h, --help        Show this message and exit.
+
+pod_name can be found from `acme ls` command.
 
 e.g:
 
