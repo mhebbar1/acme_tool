@@ -148,4 +148,13 @@ Options:
   --pod_name TEXT   Pod name
   --cont            log tail
   -h, --help        Show this message and exit.
+
+e.g:
+
+# get logs for a given pod in the $user namespace
+acme logs --pod_name pod/ping-api-8477794564-24wmc
+# logtail for a pod $user namespace
+acme logs --pod_name pod/ping-api-8477794564-24wmc --cont
+# logtail for a pod in a different namespace
+acme logs --pod_name pod/ping-api-8477794564-24wmc  --cont --namespace 20260202111749-murthyhebbar
 ```
