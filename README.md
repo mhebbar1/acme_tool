@@ -6,6 +6,7 @@ This tool currently supports one application ping api and its dependencies.
 
 ## Prerequisites
 
+### OS and Tools
 This utility has been tested using the following versions.
 
 * MacOS 15.7.3 or higher.
@@ -14,10 +15,32 @@ This utility has been tested using the following versions.
 
 Docker Desktop Install Guide for Mac: https://docs.docker.com/desktop/setup/install/mac-install/
 
+### PATH
 Update PATH if brew not found in your path
-
 ```sh
 export PATH=${PATH}:/opt/homebrew/bin:.local/bin
+```
+
+### Docker Desktop Configuration
+Configure Kubenetes in Docker using `kind` and K8s version 1.32. Specify at least two nodes when creating your cluster.
+
+Once spun up, activate the docker K8s context and confirm your nodes are present:
+
+```sh
+kubectl config use-context docker-desktop
+kubectl get nodes
+NAME                    STATUS   ROLES           AGE    VERSION
+desktop-control-plane   Ready    control-plane   5d3h   v1.32.0
+desktop-worker          Ready    <none>          5d3h   v1.32.0
+```
+
+### Install nginx controller
+You will also need to install the nginx controller into your cluster to allow
+ingress. You can do this by running:
+
+## Install nginx controller
+```sh
+make bootstrap-docker-desktop
 ```
 
 ## Clone the Repo
@@ -39,24 +62,9 @@ acme --version
   acme, version 0.0.1
 ```
 
-Configure Kubenetes in Docker using `kind` and K8s version 1.32. Specify at least two nodes when creating your cluster.
-
-Once spun up, activate the docker K8s context and confirm your nodes are present:
-
+Add bitnami helm repo
 ```sh
-kubectl config use-context docker-desktop
-kubectl get nodes
-NAME                    STATUS   ROLES           AGE    VERSION
-desktop-control-plane   Ready    control-plane   5d3h   v1.32.0
-desktop-worker          Ready    <none>          5d3h   v1.32.0
-```
-
-You will also need to install the nginx controller into your cluster to allow
-ingress. You can do this by running:
-
-## Install nginx controller
-```sh
-make bootstrap-docker-desktop
+helm repo add bitnami https://charts.bitnami.com/bitnami
 ```
 
 ## Using the Tool
