@@ -10,8 +10,15 @@ This utility has been tested using the following versions.
 
 * MacOS 15.7.3 or higher.
 * Docker Desktop 4.57.0 (215387) or higher.
+* Homebrew   # Requires super user access to install
 
 Docker Desktop Install Guide for Mac: https://docs.docker.com/desktop/setup/install/mac-install/
+
+Update PATH if brew not found in your path
+
+```sh
+export PATH=${PATH}:/opt/homebrew/bin:.local/bin
+```
 
 ## Clone the Repo
 
@@ -24,7 +31,6 @@ Clone over ssh
 Clone over https:
 
 ```git clone https://github.com/mhebbar1/acme_tool.git ```
-
 
 ```sh
 cd acme_tool
@@ -54,6 +60,7 @@ make bootstrap-docker-desktop
 ```
 
 ## Using the Tool
+Commands should be run from the acme tool directory.
 
 ```sh acme -h
 Usage: acme [OPTIONS] COMMAND [ARGS]...

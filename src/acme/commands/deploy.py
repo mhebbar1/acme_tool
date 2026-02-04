@@ -48,8 +48,8 @@ def deploy(new, user, add_labels, add_env, resources):
   -f src/helm/values/ping/postgres.yaml'
 
     # Prepare connection strings
-    redis_url = f'redis://ping-redis-master.{namespace}:6379'
-    pg_host = f'ping-postgres-postgresql.{namespace}.svc.cluster.local'
+    redis_url = f'redis://ping-redis-master:6379'
+    pg_host = f'ping-postgres-postgresql'
     pg_db = 'postgres'
     pg_user = 'postgres'
 
@@ -57,6 +57,7 @@ def deploy(new, user, add_labels, add_env, resources):
     cmd3 = f'helm upgrade \
   --kube-context docker-desktop \
   --namespace {namespace} \
+  --create-namespace \
   ping \
   src/helm/application/ \
   --wait --install \
@@ -91,11 +92,20 @@ def deploy(new, user, add_labels, add_env, resources):
 
     print("\nExecuting deployment commands...\n")
     cmd1_status = os.system(cmd1)
+    if cmd1_status == 0:
+        print("Redis deployed successfully.\n")
+    else:
+        raise RuntimeError("Failed to deploy Redis service.")
     cmd2_status = os.system(cmd2)
+    if cmd2_status == 0:
+        print("Postgres deployed successfully.\n")
+    else:
+        raise RuntimeError("Failed to deploy Postgres service.")
     cmd3_status = os.system(cmd3)
-
-    if cmd1_status != 0 or cmd2_status != 0 or cmd3_status != 0:
-        raise RuntimeError("Failed to deploy Ping service or its dependencies.")
+    if cmd3_status == 0:
+        print("Ping service deployed successfully.\n")
+    else:
+        raise RuntimeError("Failed to deploy Ping service.")
 
     print("\nDeployment completed successfully.")
     print(f"\nUI is accessible at http://ping.{namespace}.127.0.0.1.nip.io/ping\n")
