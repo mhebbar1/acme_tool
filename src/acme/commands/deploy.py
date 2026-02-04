@@ -26,7 +26,15 @@ def deploy(new, user, add_labels, add_env, resources):
         namespace = user
 
     print(f"Deploying resources to namespace: {namespace}")
-
+    ns_cmd = f'kubectl --context docker-desktop create namespace {namespace}'
+    ns_cmd_status = os.system(ns_cmd)
+    if ns_cmd_status != 0:
+        raise RuntimeError(f"Failed to create namespace '{namespace}'")
+    ns_cmd_sw = f'kubectl --context docker-desktop config set-context --current --namespace={namespace}'
+    ns_cmd_sw_status = os.system(ns_cmd_sw)
+    if ns_cmd_sw_status != 0:
+        raise RuntimeError(f"Failed to switch to namespace '{namespace}'")
+    print(f"Namespace '{namespace}' is ready.\n")
 
     # Install Postgres
     cmd1 = f'helm upgrade \
