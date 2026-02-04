@@ -22,7 +22,15 @@ export PATH=${PATH}:/opt/homebrew/bin:.local/bin
 ```
 
 ### Docker Desktop Configuration
-Configure Kubenetes in Docker using `kind` and K8s version 1.32. Specify at least two nodes when creating your cluster.
+Configure Kubenetes in Docker using `kind` and K8s version 1.32. Specify at least two nodes when creating your cluster. To do this:
+- Open Docker Desktop
+- Click on the gear towards the top right to get into settings
+- Click on Kubernetes on the left pane
+- Enable Kubernetes
+- Select kind 1.32.0
+- Set the node count to 2
+- Click apply
+
 
 Once spun up, activate the docker K8s context and confirm your nodes are present:
 
