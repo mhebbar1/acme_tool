@@ -27,18 +27,9 @@ def deploy(new, user, add_labels, add_env, resources):
 
     print(f"Deploying resources to namespace: {namespace}")
 
-    # Install redis
-    cmd1 = f'helm upgrade --install \
-  --kube-context docker-desktop \
-  --namespace {namespace} \
-  --create-namespace \
-  ping-redis \
-  bitnami/redis \
-  --wait --install \
-  -f src/helm/values/ping/redis.yaml'
 
     # Install Postgres
-    cmd2 = f'helm upgrade \
+    cmd1 = f'helm upgrade \
   --kube-context docker-desktop \
   --namespace {namespace} \
   --create-namespace \
@@ -46,6 +37,16 @@ def deploy(new, user, add_labels, add_env, resources):
   bitnami/postgresql \
   --wait --install \
   -f src/helm/values/ping/postgres.yaml'
+
+    # Install redis
+    cmd2 = f'helm upgrade --install \
+  --kube-context docker-desktop \
+  --namespace {namespace} \
+  --create-namespace \
+  ping-redis \
+  bitnami/redis \
+  --wait --install \
+  -f src/helm/values/ping/redis.yaml'
 
     # Prepare connection strings
     redis_url = f'redis://ping-redis-master:6379'
@@ -93,14 +94,14 @@ def deploy(new, user, add_labels, add_env, resources):
     print("\nExecuting deployment commands...\n")
     cmd1_status = os.system(cmd1)
     if cmd1_status == 0:
-        print("Redis deployed successfully.\n")
-    else:
-        raise RuntimeError("Failed to deploy Redis service.")
-    cmd2_status = os.system(cmd2)
-    if cmd2_status == 0:
         print("Postgres deployed successfully.\n")
     else:
         raise RuntimeError("Failed to deploy Postgres service.")
+    cmd2_status = os.system(cmd2)
+    if cmd2_status == 0:
+        print("Redis deployed successfully.\n")
+    else:
+        raise RuntimeError("Failed to deploy Redis service.")
     cmd3_status = os.system(cmd3)
     if cmd3_status == 0:
         print("Ping service deployed successfully.\n")
