@@ -26,7 +26,7 @@ def deploy(new, user, add_labels, add_env, resources):
         namespace = user
 
     print(f"Deploying resources to namespace: {namespace}")
-    ns_cmd = f'kubectl --context docker-desktop create namespace {namespace}'
+    ns_cmd = f'kubectl create namespace {namespace} --dry-run=client -o yaml | kubectl apply -f -'
     ns_cmd_status = os.system(ns_cmd)
     if ns_cmd_status != 0:
         raise RuntimeError(f"Failed to create namespace '{namespace}'")
