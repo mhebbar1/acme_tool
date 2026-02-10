@@ -85,19 +85,19 @@ def deploy(new, user, add_labels, add_env, resources):
             if key == "app":
                 print("The 'app' label is reserved and cannot be modified.")
             else:
-                cmd3 += f" --set api.additionalLabels.{key.strip()}={value.strip()}"
+                cmd3 += f" --set api.additionalLabels.{str(key.strip())}={str(value.strip())}"
 
     # Process additional env vars
     for env_arg in (add_env or "").split(","):
         if env_arg.strip():
             key, value = env_arg.split("=")
-            cmd3 += f" --set api.additionalEnvVariables.{key.strip()}={value.strip()}"
+            cmd3 += f" --set api.additionalEnvVariables.{str(key.strip())}={str(value.strip())}"
 
     # Process helm resource overrides
     for resources_v in (resources or "").split(","):
         if resources_v.strip():
             key, value = resources_v.split("=")
-            cmd3 += f" --set api.resources.{key.strip()}={value.strip()}"
+            cmd3 += f" --set api.resources.{str(key.strip())}={str(value.strip())}"
 
     print("\nExecuting deployment commands...\n")
     cmd1_status = os.system(cmd1)
