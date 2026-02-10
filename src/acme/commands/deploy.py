@@ -82,7 +82,7 @@ def deploy(new, user, add_labels, add_env, resources):
     for arg in (add_labels or "").split(","):
         if arg.strip():
             key, value = arg.split("=")
-            if key == "app":
+            if key.lower() == "app":
                 print("The 'app' label is reserved and cannot be modified.")
             else:
                 cmd3 += f" --set api.additionalLabels.{str(key.strip())}={str(value.strip())}"
